@@ -28,10 +28,12 @@ class MFUAlgorithm:
         # Find resource with highest counter (most frequently used)
         max_counter = -1
         max_index = -1
-        
+        print("MFUAlgorithm: get_replacement_index called")
+        print("Resources:", resources)
         for i, resource in enumerate(resources):
             if resource.counter > max_counter:
                 max_counter = resource.counter
                 max_index = i
+                print(f"New max counter found: {max_counter} at index {max_index}")
         
         return max_index
