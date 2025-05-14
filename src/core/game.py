@@ -21,7 +21,7 @@ class Game:
         self.screen = pygame.display.set_mode(
             (self.config.SCREEN_WIDTH, self.config.SCREEN_HEIGHT)
         )
-        pygame.display.set_caption("Rust Overload")
+        pygame.display.set_caption("Sobrecarga de Óxido")
         
         # Initialize clock
         self.clock = pygame.time.Clock()
@@ -51,11 +51,23 @@ class Game:
         self.score = 0
         self.health = self.config.PLAYER_MAX_HEALTH
         self.weapons_repaired = 0
+        
+        # Celebration animation state
+        self.celebrating = False
+        self.celebration_frame = 1
+        self.celebration_timer = 0
+        self.celebration_interval = 200  # milliseconds between frames
     
     def load_assets(self):
         """Load all game assets"""
         # Load character image
         self.asset_loader.load_image("character", self.config.CHARACTER_IMAGE, (80, 120))
+        
+        # Load celebration images
+        for i in range(1, 6):
+            self.asset_loader.load_image(f"celebration_{i}", 
+                                        f"{self.config.IMAGES_DIR}/Character/celebracion_{i}.png", 
+                                        (80, 120))
         
         # Load resource images
         for resource_type, path in self.config.RESOURCE_IMAGES.items():
@@ -68,6 +80,12 @@ class Game:
         
         # Load UI images
         self.asset_loader.load_image("clock_icon", self.config.CLOCK_ICON, (20, 20))
+        
+        # Load sounds
+        self.asset_loader.load_sound("point", f"{self.config.ASSETS_DIR}/audio/point.mp3")
+        self.asset_loader.load_sound("obtain_element_1", f"{self.config.ASSETS_DIR}/audio/obtener_elemento.mp3")
+        self.asset_loader.load_sound("obtain_element_2", f"{self.config.ASSETS_DIR}/audio/obtener_elemento_2.mp3")
+        self.asset_loader.load_sound("lose_point", f"{self.config.ASSETS_DIR}/audio/lose_point.mp3")
         
     def run(self):
         """Main game loop"""
@@ -83,6 +101,18 @@ class Game:
             
             # Update
             self.scene_manager.update()
+            
+            # Update celebration animation if active
+            if self.celebrating:
+                self.celebration_timer += self.clock.get_time()
+                if self.celebration_timer >= self.celebration_interval:
+                    self.celebration_frame += 1
+                    self.celebration_timer = 0
+                    
+                    # End celebration after showing all frames
+                    if self.celebration_frame > 5:
+                        self.celebrating = False
+                        self.celebration_frame = 1
             
             # Draw
             self.screen.fill(self.config.BACKGROUND_COLOR)
@@ -110,17 +140,44 @@ class Game:
                         # Only lose health once per round for destroyed weapons
                         self.health -= 1
                         weapon_destroyed_this_round = True
+                        # Play lose point sound
+                        self.play_lose_point_sound()
     
     def check_game_over(self):
         """Check if game is over (player health <= 0)"""
         if self.health <= 0:
-            self.game_over("You died from toxic exposure!")
+            self.game_over("¡Has muerto por exposición tóxica!")
         
     def check_win_condition(self):
         """Check if player has won (repaired enough weapons)"""
         # If WEAPONS_TO_WIN is 0, we're in infinite mode
         if self.config.WEAPONS_TO_WIN > 0 and self.weapons_repaired >= self.config.WEAPONS_TO_WIN:
-            self.game_over("You've successfully equipped your faction! Victory!")
+            self.game_over("¡Has equipado exitosamente a tu facción! ¡Victoria!")
+    
+    def start_celebration(self):
+        """Start the celebration animation and play sound when points are gained"""
+        self.celebrating = True
+        self.celebration_frame = 1
+        self.celebration_timer = 0
+        
+        # Play the point sound
+        point_sound = self.asset_loader.get_sound("point")
+        if point_sound:
+            point_sound.play()
+    
+    def play_obtain_element_sound(self):
+        """Play a random sound when an element is obtained"""
+        import random
+        sound_name = random.choice(["obtain_element_1", "obtain_element_2"])
+        sound = self.asset_loader.get_sound(sound_name)
+        if sound:
+            sound.play()
+    
+    def play_lose_point_sound(self):
+        """Play sound when a life is lost"""
+        sound = self.asset_loader.get_sound("lose_point")
+        if sound:
+            sound.play()
     
     def game_over(self, message):
         """Handle game over state"""
@@ -132,7 +189,7 @@ class Game:
         font_medium = pygame.font.Font(None, 36)
         
         # Game over title
-        title_text = font_large.render("GAME OVER", True, (255, 0, 0))
+        title_text = font_large.render("FIN DEL JUEGO", True, (255, 0, 0))
         title_rect = title_text.get_rect(center=(self.config.SCREEN_WIDTH // 2, 200))
         self.screen.blit(title_text, title_rect)
         
@@ -142,17 +199,17 @@ class Game:
         self.screen.blit(message_text, message_rect)
         
         # Score
-        score_text = font_medium.render(f"Final Score: {self.score}", True, (255, 255, 0))
+        score_text = font_medium.render(f"Puntuación Final: {self.score}", True, (255, 255, 0))
         score_rect = score_text.get_rect(center=(self.config.SCREEN_WIDTH // 2, 340))
         self.screen.blit(score_text, score_rect)
         
         # Weapons repaired
-        weapons_text = font_medium.render(f"Weapons Repaired: {self.weapons_repaired}", True, (200, 200, 200))
+        weapons_text = font_medium.render(f"Armas Reparadas: {self.weapons_repaired}", True, (200, 200, 200))
         weapons_rect = weapons_text.get_rect(center=(self.config.SCREEN_WIDTH // 2, 380))
         self.screen.blit(weapons_text, weapons_rect)
         
         # Exit instructions
-        exit_text = font_medium.render("Press ESC to exit", True, (150, 150, 150))
+        exit_text = font_medium.render("Presiona ESC para salir", True, (150, 150, 150))
         exit_rect = exit_text.get_rect(center=(self.config.SCREEN_WIDTH // 2, 450))
         self.screen.blit(exit_text, exit_rect)
         

@@ -95,13 +95,20 @@ class CollectionScene(Scene):
                 # Add to inventory
                 success, replaced, damage = self.game.resource_manager.add_resource(resource["type"])
                 
+                # Play sound when obtaining an element
+                self.game.play_obtain_element_sound()
+                
                 # Apply damage if toxic replacement
                 if damage > 0:
                     self.game.health -= damage
+                    # Play lose point sound
+                    self.game.play_lose_point_sound()
                 
                 # Apply additional damage if collecting radioactive core
                 if resource["type"] == "core":
                     self.game.health -= 1
+                    # Play lose point sound
+                    self.game.play_lose_point_sound()
                 
                 # Remove from scene
                 self.resources.remove(resource)
@@ -149,7 +156,7 @@ class CollectionScene(Scene):
         
         # Draw instructions
         font = self.config.FONT_SMALL
-        text = font.render("Use LEFT/RIGHT arrows to move. Collect falling resources.", True, self.config.TEXT_COLOR)
+        text = font.render("Usa las flechas IZQUIERDA/DERECHA para moverte. Recoge los recursos que caen.", True, self.config.TEXT_COLOR)
         surface.blit(text, (50, self.config.SCREEN_HEIGHT - 50))
     
     def draw_background(self, surface):

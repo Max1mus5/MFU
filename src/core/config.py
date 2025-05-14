@@ -77,36 +77,36 @@ class Config:
         
         # Resource types
         self.RESOURCE_TYPES = {
-            "nut": {"name": "Rusty Nut", "rarity": 1, "color": (139, 69, 19)},
-            "circuit": {"name": "Fragile Circuit", "rarity": 2, "color": (30, 144, 255)},
-            "cell": {"name": "Energy Cell", "rarity": 3, "color": (50, 205, 50)},
-            "core": {"name": "Radioactive Core", "rarity": 4, "color": (148, 0, 211)}
+            "nut": {"name": "Tuerca Oxidada", "rarity": 1, "color": (139, 69, 19)},
+            "circuit": {"name": "Circuito Frágil", "rarity": 2, "color": (30, 144, 255)},
+            "cell": {"name": "Celda de Energía", "rarity": 3, "color": (50, 205, 50)},
+            "core": {"name": "Núcleo Radioactivo", "rarity": 4, "color": (148, 0, 211)}
         }
         
         # Weapon types and requirements
         self.WEAPONS = {
             "pistol": {
-                "name": "Rusty Pistol",
+                "name": "Pistola Oxidada",
                 "requirements": {"nut": 2, "circuit": 1},
                 "points": 1
             },
             "shotgun": {
-                "name": "Scrap Shotgun",
+                "name": "Escopeta de Chatarra",
                 "requirements": {"nut": 3, "circuit": 2},
                 "points": 2
             },
             "rifle": {
-                "name": "Makeshift Rifle",
+                "name": "Rifle Improvisado",
                 "requirements": {"nut": 2, "circuit": 2, "cell": 1},
                 "points": 3
             },
             "laser": {
-                "name": "Laser Cutter",
+                "name": "Cortador Láser",
                 "requirements": {"circuit": 3, "cell": 2},
                 "points": 4
             },
             "cannon": {
-                "name": "Plasma Cannon",
+                "name": "Cañón de Plasma",
                 "requirements": {"nut": 2, "circuit": 2, "cell": 1, "core": 1},
                 "points": 5
             }

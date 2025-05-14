@@ -53,7 +53,7 @@ class InventoryPanel:
         
         # Draw title
         font = self.config.FONT_MEDIUM
-        title = font.render("INVENTORY", True, self.config.TEXT_COLOR)
+        title = font.render("INVENTARIO", True, self.config.TEXT_COLOR)
         surface.blit(title, (self.rect.x + 10, self.rect.y + 10))
         
         # Draw inventory slots

@@ -103,9 +103,16 @@ class WorkshopScene(Scene):
         pygame.draw.rect(surface, (70, 60, 50), pygame.Rect(400, 100, 350, 500))
         
         # Draw character on the right side of the workshop
-        character_image = self.game.asset_loader.get_image("character")
-        if character_image:
-            surface.blit(character_image, (780, 300))
+        if self.game.celebrating:
+            # Draw celebration animation
+            celebration_image = self.game.asset_loader.get_image(f"celebration_{self.game.celebration_frame}")
+            if celebration_image:
+                surface.blit(celebration_image, (780, 300))
+        else:
+            # Draw normal character
+            character_image = self.game.asset_loader.get_image("character")
+            if character_image:
+                surface.blit(character_image, (780, 300))
     
     def try_repair_weapon(self):
         """Attempt to repair the selected weapon"""
@@ -114,6 +121,9 @@ class WorkshopScene(Scene):
                 # Weapon repaired successfully
                 self.game.weapons_repaired += 1
                 self.game.score += self.selected_weapon.points
+                
+                # Start celebration animation and play sound
+                self.game.start_celebration()
                 
                 # Replace with a new weapon of random type
                 weapon_types = list(self.config.WEAPONS.keys())

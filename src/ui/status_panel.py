@@ -62,7 +62,7 @@ class StatusPanel:
         pygame.draw.rect(surface, self.config.UI_BORDER_COLOR, self.rect, 2)
         
         # Draw health
-        health_text = self.config.FONT_SMALL.render(f"Health: ", True, self.config.TEXT_COLOR)
+        health_text = self.config.FONT_SMALL.render(f"Salud: ", True, self.config.TEXT_COLOR)
         surface.blit(health_text, (self.rect.x + 10, self.rect.y + 10))
         
         # Draw health hearts
@@ -74,14 +74,14 @@ class StatusPanel:
         if self.config.WEAPONS_TO_WIN > 0:
             # Normal mode - show progress towards victory
             score_text = self.config.FONT_SMALL.render(
-                f"Score: {self.game.score} | Weapons: {self.game.weapons_repaired}/{self.config.WEAPONS_TO_WIN}", 
+                f"Puntos: {self.game.score} | Armas: {self.game.weapons_repaired}/{self.config.WEAPONS_TO_WIN}", 
                 True, 
                 self.config.TEXT_COLOR
             )
         else:
             # Infinite mode
             score_text = self.config.FONT_SMALL.render(
-                f"Score: {self.game.score} | Weapons: {self.game.weapons_repaired} (∞ Mode)", 
+                f"Puntos: {self.game.score} | Armas: {self.game.weapons_repaired} (Modo ∞)", 
                 True, 
                 self.config.TEXT_COLOR
             )
@@ -98,18 +98,18 @@ class StatusPanel:
             timer_text = self.config.FONT_SMALL.render(f"{next_aging}s", True, self.config.TEXT_COLOR)
             surface.blit(timer_text, (self.rect.x + 825, self.rect.y + 10))
         else:
-            timer_text = self.config.FONT_SMALL.render(f"Aging: {next_aging}s", True, self.config.TEXT_COLOR)
+            timer_text = self.config.FONT_SMALL.render(f"Oxidación: {next_aging}s", True, self.config.TEXT_COLOR)
             surface.blit(timer_text, (self.rect.x + 800, self.rect.y + 10))
         
         # Draw navigation buttons
         pygame.draw.rect(surface, (60, 55, 50), self.workshop_button_rect)
         pygame.draw.rect(surface, self.config.UI_BORDER_COLOR, self.workshop_button_rect, 2)
-        workshop_text = self.config.FONT_SMALL.render("Workshop", True, self.config.TEXT_COLOR)
+        workshop_text = self.config.FONT_SMALL.render("Taller", True, self.config.TEXT_COLOR)
         workshop_text_rect = workshop_text.get_rect(center=self.workshop_button_rect.center)
         surface.blit(workshop_text, workshop_text_rect)
         
         pygame.draw.rect(surface, (60, 55, 50), self.collection_button_rect)
         pygame.draw.rect(surface, self.config.UI_BORDER_COLOR, self.collection_button_rect, 2)
-        collection_text = self.config.FONT_SMALL.render("Collection", True, self.config.TEXT_COLOR)
+        collection_text = self.config.FONT_SMALL.render("Recolección", True, self.config.TEXT_COLOR)
         collection_text_rect = collection_text.get_rect(center=self.collection_button_rect.center)
         surface.blit(collection_text, collection_text_rect)

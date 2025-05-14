@@ -67,7 +67,7 @@ class RepairPanel:
         
         # Draw title
         font = self.config.FONT_MEDIUM
-        title = font.render("REPAIR STATION", True, self.config.TEXT_COLOR)
+        title = font.render("ESTACIÓN DE REPARACIÓN", True, self.config.TEXT_COLOR)
         surface.blit(title, (self.rect.x + 10, self.rect.y + 10))
         
         # Draw weapons
@@ -109,7 +109,7 @@ class RepairPanel:
                 
                 # Draw repaired status if applicable
                 if weapon.repaired:
-                    status_text = self.config.FONT_SMALL.render("REPAIRED", True, (0, 200, 0))
+                    status_text = self.config.FONT_SMALL.render("REPARADA", True, (0, 200, 0))
                     surface.blit(status_text, (weapon_rect.x + weapon_rect.width - 100, weapon_rect.y + 10))
         
         # Draw repair button
@@ -117,7 +117,7 @@ class RepairPanel:
         pygame.draw.rect(surface, button_color, self.repair_button_rect)
         pygame.draw.rect(surface, self.config.UI_BORDER_COLOR, self.repair_button_rect, 2)
         
-        button_text = self.config.FONT_MEDIUM.render("REPAIR", True, self.config.TEXT_COLOR)
+        button_text = self.config.FONT_MEDIUM.render("REPARAR", True, self.config.TEXT_COLOR)
         text_rect = button_text.get_rect(center=self.repair_button_rect.center)
         surface.blit(button_text, text_rect)
     
