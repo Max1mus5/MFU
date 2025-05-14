@@ -5,6 +5,11 @@ Weapon module - Defines weapon entities
 class Weapon:
     """Weapon entity that can be repaired using resources"""
     
+    # Weapon states
+    STATE_NORMAL = "normal"
+    STATE_OXIDIZED = "oxidized"
+    STATE_DESTROYED = "destroyed"
+    
     def __init__(self, weapon_type, config):
         """
         Initialize a weapon
@@ -20,6 +25,8 @@ class Weapon:
         self.requirements = self.weapon_data["requirements"]
         self.points = self.weapon_data["points"]
         self.repaired = False
+        self.state = self.STATE_NORMAL
+        self.state_timer = 0  # Timer for state changes
     
     def can_repair(self, resource_manager):
         """
@@ -57,4 +64,33 @@ class Weapon:
         
         # Mark as repaired
         self.repaired = True
+        self.state = self.STATE_NORMAL  # Reset state when repaired
+        self.state_timer = 0
         return True
+        
+    def update_state(self, delta_time):
+        """
+        Update weapon state based on time
+        
+        Args:
+            delta_time (int): Time elapsed since last update in milliseconds
+            
+        Returns:
+            bool: True if state changed to destroyed, False otherwise
+        """
+        if self.repaired:
+            return False
+            
+        self.state_timer += delta_time
+        
+        # Check for state transitions
+        if self.state == self.STATE_NORMAL and self.state_timer >= self.config.AGING_INTERVAL:
+            self.state = self.STATE_OXIDIZED
+            self.state_timer = 0
+            return False
+        elif self.state == self.STATE_OXIDIZED and self.state_timer >= self.config.AGING_INTERVAL:
+            self.state = self.STATE_DESTROYED
+            self.state_timer = 0
+            return True  # Signal that weapon was destroyed
+            
+        return False

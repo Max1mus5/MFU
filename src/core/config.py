@@ -47,13 +47,29 @@ class Config:
             "core": os.path.join(self.IMAGES_DIR, "elementos", "element_radioactivo.png")
         }
         
-        # Weapon images
+        # Weapon images by state
         self.WEAPON_IMAGES = {
-            "pistol": os.path.join(self.IMAGES_DIR, "armas", "arma_pistola.png"),
-            "shotgun": os.path.join(self.IMAGES_DIR, "armas", "arma_escopeta.png"),
-            "rifle": os.path.join(self.IMAGES_DIR, "armas", "arma_rifle.png"),
-            "laser": os.path.join(self.IMAGES_DIR, "armas", "arma_laser.png"),
-            "cannon": os.path.join(self.IMAGES_DIR, "armas", "arma_cañon.png")
+            "normal": {
+                "pistol": os.path.join(self.IMAGES_DIR, "armas", "arma_pistola.png"),
+                "shotgun": os.path.join(self.IMAGES_DIR, "armas", "arma_escopeta.png"),
+                "rifle": os.path.join(self.IMAGES_DIR, "armas", "arma_rifle.png"),
+                "laser": os.path.join(self.IMAGES_DIR, "armas", "arma_laser.png"),
+                "cannon": os.path.join(self.IMAGES_DIR, "armas", "arma_cañon.png")
+            },
+            "oxidized": {
+                "pistol": os.path.join(self.IMAGES_DIR, "armas_oxidadas", "arma_pistola.png"),
+                "shotgun": os.path.join(self.IMAGES_DIR, "armas_oxidadas", "arma_escopeta.png"),
+                "rifle": os.path.join(self.IMAGES_DIR, "armas_oxidadas", "arma_rifle.png"),
+                "laser": os.path.join(self.IMAGES_DIR, "armas_oxidadas", "arma_laser.png"),
+                "cannon": os.path.join(self.IMAGES_DIR, "armas_oxidadas", "arma_cañon.png")
+            },
+            "destroyed": {
+                "pistol": os.path.join(self.IMAGES_DIR, "armas_destruidas", "arma_pistola.png"),
+                "shotgun": os.path.join(self.IMAGES_DIR, "armas_destruidas", "arma_escopeta.png"),
+                "rifle": os.path.join(self.IMAGES_DIR, "armas_destruidas", "arma_rifle.png"),
+                "laser": os.path.join(self.IMAGES_DIR, "armas_destruidas", "arma_laser.png"),
+                "cannon": os.path.join(self.IMAGES_DIR, "armas_destruidas", "arma_cañon.png")
+            }
         }
         
         # UI images

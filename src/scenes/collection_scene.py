@@ -37,6 +37,7 @@ class CollectionScene(Scene):
         # Movement flags
         self.moving_left = False
         self.moving_right = False
+        self.facing_left = False  # Track which direction the player is facing
     
     def on_enter(self):
         """Called when scene becomes active"""
@@ -71,8 +72,10 @@ class CollectionScene(Scene):
         # Update player movement
         if self.moving_left:
             self.player_x = max(50, self.player_x - self.player_speed)
+            self.facing_left = True
         if self.moving_right:
             self.player_x = min(self.config.SCREEN_WIDTH - 90, self.player_x + self.player_speed)
+            self.facing_left = False
         
         self.player_rect.x = self.player_x
         
@@ -95,6 +98,10 @@ class CollectionScene(Scene):
                 # Apply damage if toxic replacement
                 if damage > 0:
                     self.game.health -= damage
+                
+                # Apply additional damage if collecting radioactive core
+                if resource["type"] == "core":
+                    self.game.health -= 1
                 
                 # Remove from scene
                 self.resources.remove(resource)
@@ -127,7 +134,12 @@ class CollectionScene(Scene):
         # Draw player character
         character_image = self.game.asset_loader.get_image("character")
         if character_image:
-            surface.blit(character_image, (self.player_rect.x - 20, self.player_rect.y - 30))
+            if self.facing_left:
+                # Flip the image horizontally when facing left
+                flipped_image = pygame.transform.flip(character_image, True, False)
+                surface.blit(flipped_image, (self.player_rect.x - 20, self.player_rect.y - 30))
+            else:
+                surface.blit(character_image, (self.player_rect.x - 20, self.player_rect.y - 30))
         else:
             # Fallback to rectangle if image not available
             pygame.draw.rect(surface, (200, 200, 200), self.player_rect)

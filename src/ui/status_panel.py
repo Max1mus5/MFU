@@ -70,8 +70,21 @@ class StatusPanel:
             color = (200, 50, 50) if i < self.game.health else (100, 30, 30)
             pygame.draw.circle(surface, color, (self.rect.x + 80 + i * 20, self.rect.y + 20), 8)
         
-        # Draw score
-        score_text = self.config.FONT_SMALL.render(f"Score: {self.game.score}", True, self.config.TEXT_COLOR)
+        # Draw score and weapons repaired
+        if self.config.WEAPONS_TO_WIN > 0:
+            # Normal mode - show progress towards victory
+            score_text = self.config.FONT_SMALL.render(
+                f"Score: {self.game.score} | Weapons: {self.game.weapons_repaired}/{self.config.WEAPONS_TO_WIN}", 
+                True, 
+                self.config.TEXT_COLOR
+            )
+        else:
+            # Infinite mode
+            score_text = self.config.FONT_SMALL.render(
+                f"Score: {self.game.score} | Weapons: {self.game.weapons_repaired} (∞ Mode)", 
+                True, 
+                self.config.TEXT_COLOR
+            )
         surface.blit(score_text, (self.rect.x + 180, self.rect.y + 10))
         
         # Draw aging timer

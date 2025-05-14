@@ -85,7 +85,8 @@ class RepairPanel:
                 
                 # Draw weapon image if available
                 if self.game and self.game.asset_loader:
-                    weapon_image = self.game.asset_loader.get_image(f"weapon_{weapon.type}")
+                    # Get image based on weapon state
+                    weapon_image = self.game.asset_loader.get_image(f"weapon_{weapon.type}_{weapon.state}")
                     if weapon_image:
                         image_x = weapon_rect.x + 10
                         image_y = weapon_rect.y + 10
@@ -103,7 +104,7 @@ class RepairPanel:
                         True,
                         self.config.RESOURCE_TYPES[resource_type]['color']
                     )
-                    surface.blit(req_text, (weapon_rect.x + 20, weapon_rect.y + y_offset))
+                    surface.blit(req_text, (weapon_rect.x + 150, weapon_rect.y + y_offset))
                     y_offset += 20
                 
                 # Draw repaired status if applicable
