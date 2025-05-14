@@ -1,118 +1,167 @@
-# Rust Overload
+# Sobrecarga de Óxido (Rust Overload)
 
-A post-apocalyptic workshop simulator game implementing the Most Frequently Used (MFU) algorithm for resource management.
+Un simulador de taller post-apocalíptico que implementa el algoritmo de Más Frecuentemente Usado (MFU) para la gestión de recursos.
 
-## Game Concept
+## Concepto del Juego
 
-In the year 2147, after an environmental collapse, humanity survives in underground cities. You play as Jax, an engineer maintaining weapons for defense against bandits and mutants. Your workshop has limited inventory space, and you must collect resources in quick missions.
+En el año 2147, después de un colapso ambiental, la humanidad sobrevive en ciudades subterráneas. Juegas como Jax, un ingeniero que mantiene armas para la defensa contra bandidos y mutantes. Tu taller tiene espacio de inventario limitado, y debes recolectar recursos en misiones rápidas.
 
-The key challenge: Materials oxidize if not used frequently (the air is full of acid!). To avoid wasting space, you must strategically discard the most frequently used resources that have degraded.
+El desafío principal: Los materiales se oxidan si no se usan con frecuencia (¡el aire está lleno de ácido!). Para evitar desperdiciar espacio, debes descartar estratégicamente los recursos más utilizados que se han degradado.
 
-## Game Mechanics
+## Mecánicas del Juego
 
-### Resources and Usage Counters
-- **Resource Types**:
-  - 🟫 Rusty Nuts (basic, used in any weapon)
-  - 🔵 Fragile Circuits (for electric weapons)
-  - 🔋 Energy Cells (for lasers)
-  - 💀 Radioactive Cores (for heavy weapons)
+### Recursos y Contadores de Uso
+- **Tipos de Recursos**:
+  - 🟫 Tuercas Oxidadas (básicas, usadas en cualquier arma)
+  - 🔵 Circuitos Frágiles (para armas eléctricas)
+  - 🔋 Celdas de Energía (para láseres)
+  - 💀 Núcleos Radioactivos (para armas pesadas)
 
-- **MFU with Aging**:
-  - Each resource has an 8-bit counter (0-255) that increases when used
-  - Every 15 seconds, counters are divided by 2 (simulating oxidation)
-  - When inventory is full, the resource with the highest counter is replaced
+- **MFU con Envejecimiento**:
+  - Cada recurso tiene un contador de 8 bits (0-255) que aumenta cuando se usa
+  - Cada 15 segundos, los contadores se dividen por 2 (simulando oxidación)
+  - Cuando el inventario está lleno, se reemplaza el recurso con el contador más alto
 
-### Gameplay Flow
-1. **Collection Phase**: Travel to risk zones to collect resources
-2. **Repair Phase**: Choose damaged weapons to repair using specific resource combinations
-3. **Replacement Phase**: When inventory is full, MFU algorithm automatically removes the most used resource
+### Flujo de Juego
+1. **Fase de Recolección**: Viaja a zonas de riesgo para recolectar recursos
+2. **Fase de Reparación**: Elige armas dañadas para reparar usando combinaciones específicas de recursos
+3. **Fase de Reemplazo**: Cuando el inventario está lleno, el algoritmo MFU elimina automáticamente el recurso más usado
 
-## Project Structure
+## Estructura del Proyecto
 
 ```
 MFU/
 ├── assets/
-│   ├── audio/       # Game sound effects and music
-│   └── images/      # Game sprites and UI elements
+│   ├── audio/       # Efectos de sonido y música del juego
+│   │   ├── lose_point.mp3         # Sonido al perder vida
+│   │   ├── obtener_elemento.mp3   # Sonido al obtener elemento (opción 1)
+│   │   ├── obtener_elemento_2.mp3 # Sonido al obtener elemento (opción 2)
+│   │   └── point.mp3              # Sonido al ganar puntos
+│   └── images/      # Sprites y elementos de UI
+│       ├── Character/             # Imágenes de celebración del personaje
+│       │   ├── celebracion_1.png  # Frame 1 de celebración
+│       │   ├── celebracion_2.png  # Frame 2 de celebración
+│       │   ├── celebracion_3.png  # Frame 3 de celebración
+│       │   ├── celebracion_4.png  # Frame 4 de celebración
+│       │   └── celebracion_5.png  # Frame 5 de celebración
 ├── src/
-│   ├── core/        # Core game systems
-│   │   ├── config.py            # Game settings and constants
-│   │   ├── game.py              # Main game controller
-│   │   ├── mfu_algorithm.py     # MFU replacement algorithm
-│   │   ├── resource_manager.py  # Inventory and resource management
-│   │   └── scene_manager.py     # Scene management system
-│   ├── entities/    # Game entities
-│   │   ├── resource.py          # Resource entity
-│   │   └── weapon.py            # Weapon entity
-│   ├── scenes/      # Game scenes
-│   │   ├── base_scene.py        # Abstract base scene class
-│   │   ├── collection_scene.py  # Resource collection gameplay
-│   │   └── workshop_scene.py    # Workshop repair gameplay
-│   ├── ui/          # User interface components
-│   │   ├── inventory_panel.py   # Inventory display
-│   │   ├── repair_panel.py      # Weapon repair interface
-│   │   └── status_panel.py      # Game status and navigation
-│   └── utils/       # Utility functions
-│       └── asset_loader.py      # Asset loading utilities
-└── main.py          # Game entry point
+│   ├── core/        # Sistemas principales del juego
+│   │   ├── config.py            # Configuraciones y constantes del juego
+│   │   ├── game.py              # Controlador principal del juego
+│   │   ├── mfu_algorithm.py     # Algoritmo de reemplazo MFU
+│   │   ├── resource_manager.py  # Gestión de inventario y recursos
+│   │   └── scene_manager.py     # Sistema de gestión de escenas
+│   ├── entities/    # Entidades del juego
+│   │   ├── resource.py          # Entidad de recurso
+│   │   └── weapon.py            # Entidad de arma
+│   ├── scenes/      # Escenas del juego
+│   │   ├── base_scene.py        # Clase base abstracta para escenas
+│   │   ├── collection_scene.py  # Gameplay de recolección de recursos
+│   │   └── workshop_scene.py    # Gameplay de reparación en el taller
+│   ├── ui/          # Componentes de interfaz de usuario
+│   │   ├── inventory_panel.py   # Visualización del inventario
+│   │   ├── repair_panel.py      # Interfaz de reparación de armas
+│   │   └── status_panel.py      # Estado del juego y navegación
+│   └── utils/       # Funciones de utilidad
+│       └── asset_loader.py      # Utilidades para cargar assets
+└── main.py          # Punto de entrada del juego
 ```
 
-## Module Descriptions
+## Documentación Detallada del Código
 
-### Core Modules
+### Configuraciones Generales
+- **src/core/config.py**: Contiene todas las configuraciones del juego:
+  - Líneas 13-14: Configuración de pantalla (ancho y alto)
+  - Línea 15: FPS del juego
+  - Líneas 18-22: Colores utilizados en el juego
+  - Líneas 25-29: Mecánicas del juego (tamaño de inventario, intervalo de envejecimiento, etc.)
+  - Líneas 32-33: Configuración del jugador (salud máxima, armas para ganar)
+  - Líneas 36-37: Rutas de assets
+  - Líneas 79-84: Definición de tipos de recursos con nombres, rareza y colores
+  - Líneas 87-113: Definición de tipos de armas, requisitos y puntos
 
-- **config.py**: Contains game settings, constants, and configuration values
-- **game.py**: Main game controller that manages the game loop and scenes
-- **mfu_algorithm.py**: Implements the Most Frequently Used replacement algorithm
-- **resource_manager.py**: Manages the player's inventory and resource collection
-- **scene_manager.py**: Handles different game scenes and transitions between them
+### Gestión de Recursos y Armas
+- **src/entities/resource.py**: Define la clase Resource con:
+  - Contador de uso que aumenta cuando se usa un recurso
+  - Umbral tóxico que determina cuándo un recurso es peligroso de reemplazar
+  
+- **src/entities/weapon.py**: Define la clase Weapon con:
+  - Estados de arma (normal, oxidada, destruida)
+  - Requisitos de recursos para reparación
+  - Método de reparación que consume recursos
 
-### Entity Modules
+### Sistema de Daño y Pérdida de Vida
+- **src/core/game.py**: 
+  - Líneas 125-144: Método `apply_aging()` que maneja el envejecimiento de recursos y armas
+  - Líneas 139-144: Cuando un arma se destruye, el jugador pierde 1 punto de salud y se reproduce el sonido de pérdida
+  - Líneas 146-149: Método `check_game_over()` que verifica si la salud del jugador llegó a 0
+  
+- **src/scenes/collection_scene.py**:
+  - Líneas 101-111: Daño al jugador cuando recolecta recursos tóxicos o núcleos radioactivos
 
-- **resource.py**: Defines the Resource class for collectible items
-- **weapon.py**: Defines the Weapon class for repairable weapons
+### Animaciones y Efectos de Sonido
+- **src/core/game.py**:
+  - Líneas 55-59: Inicialización del estado de celebración
+  - Líneas 155-164: Método `start_celebration()` que inicia la animación y reproduce el sonido
+  - Líneas 166-172: Método `play_obtain_element_sound()` que reproduce un sonido aleatorio al obtener un elemento
+  - Líneas 174-178: Método `play_lose_point_sound()` que reproduce el sonido al perder vida
+  - Líneas 105-115: Actualización de la animación de celebración en el bucle principal
 
-### Scene Modules
+- **src/scenes/workshop_scene.py**:
+  - Líneas 106-115: Renderizado de la animación de celebración o personaje normal
+  - Líneas 118-119: Inicio de la celebración cuando se repara un arma
 
-- **base_scene.py**: Abstract base class for all game scenes
-- **collection_scene.py**: Scene for collecting resources in the wasteland
-- **workshop_scene.py**: Main gameplay scene in the workshop for repairing weapons
+### Escenas del Juego
+- **src/scenes/workshop_scene.py**: Escena principal del taller donde:
+  - Se reparan armas usando recursos del inventario
+  - Se ganan puntos al reparar armas
+  - Se inicia la animación de celebración al reparar un arma
 
-### UI Modules
+- **src/scenes/collection_scene.py**: Escena de recolección donde:
+  - El jugador se mueve para recolectar recursos que caen
+  - Se reproducen sonidos al obtener elementos
+  - Se puede perder salud al recolectar elementos peligrosos
 
-- **inventory_panel.py**: UI component for displaying and interacting with inventory
-- **repair_panel.py**: UI component for weapon repair interface
-- **status_panel.py**: UI component for game status and navigation buttons
+### Interfaz de Usuario
+- **src/ui/status_panel.py**: Panel de estado que muestra:
+  - Salud del jugador (líneas 64-71)
+  - Puntuación y armas reparadas (líneas 73-88)
+  - Temporizador de oxidación (líneas 90-102)
+  - Botones de navegación (líneas 104-115)
 
-### Utility Modules
+- **src/ui/repair_panel.py**: Panel de reparación que muestra:
+  - Armas disponibles para reparar (líneas 73-113)
+  - Botón de reparación (líneas 115-122)
 
-- **asset_loader.py**: Utility for loading and managing game assets (images, sounds, fonts)
+- **src/ui/inventory_panel.py**: Panel de inventario que muestra:
+  - Recursos en el inventario (líneas 60-107)
+  - Barra de contador para cada recurso (líneas 93-107)
 
-## Game Objectives
+## Objetivos del Juego
 
-- **Win Condition**: Repair 10 weapons to equip your faction and resist a final mutant attack
-- **Lose Condition**: 
-  - Health depleted (from toxic resource replacements)
-  - Failure to repair enough weapons before the time limit
+- **Condición de Victoria**: Reparar 10 armas para equipar a tu facción y resistir un ataque final de mutantes
+- **Condición de Derrota**: 
+  - Salud agotada (por reemplazos tóxicos de recursos)
+  - No reparar suficientes armas antes del límite de tiempo
 
-## Strategic Elements
+## Elementos Estratégicos
 
-- Don't overuse a single resource type (high counter = candidate for removal)
-- Balance aging by using resources before they oxidize too much
-- Prioritize rare resources like radioactive cores strategically
+- No sobreutilizar un solo tipo de recurso (contador alto = candidato para eliminación)
+- Equilibrar el envejecimiento usando recursos antes de que se oxiden demasiado
+- Priorizar estratégicamente recursos raros como núcleos radioactivos
 
-## Installation and Running
+## Instalación y Ejecución
 
-1. Ensure you have Python 3.6+ and Pygame installed
-2. Clone this repository
-3. Run `python main.py` to start the game
+1. Asegúrate de tener Python 3.6+ y Pygame instalados
+2. Clona este repositorio
+3. Ejecuta `python main.py` para iniciar el juego
 
-## Controls
+## Controles
 
-- **Workshop Scene**:
-  - Mouse: Select resources and weapons, click repair button
-  - C key: Switch to collection scene
+- **Escena del Taller**:
+  - Ratón: Seleccionar recursos y armas, hacer clic en el botón de reparación
+  - Tecla C: Cambiar a la escena de recolección
 
-- **Collection Scene**:
-  - Left/Right arrows: Move player
-  - W key: Switch to workshop scene
+- **Escena de Recolección**:
+  - Flechas Izquierda/Derecha: Mover al jugador
+  - Tecla W: Cambiar a la escena del taller
