@@ -44,6 +44,9 @@ class CollectionScene(Scene):
         # Reset resources
         self.resources = []
         self.spawn_timer = 0
+        
+        # Start playing collection background music
+        self.game.play_background_music("collection")
     
     def handle_event(self, event):
         """Handle pygame events"""

@@ -47,8 +47,8 @@ class WorkshopScene(Scene):
     
     def on_enter(self):
         """Called when scene becomes active"""
-        # Load any necessary resources
-        pass
+        # Start playing workshop background music
+        self.game.play_background_music("workshop")
     
     def handle_event(self, event):
         """Handle pygame events"""
