@@ -34,7 +34,6 @@ async def show_start_screen(screen, clock, config):
     title_text = font_large.render("SOBRECARGA DE ÓXIDO", True, (245, 166, 35))
     subtitle_text = font_medium.render("Un simulador post-apocalíptico", True, (200, 200, 200))
     start_text = font_medium.render("Presiona ESPACIO para comenzar", True, (255, 255, 255))
-    audio_text = font_small.render("(Esto también activará el audio del juego)", True, (180, 180, 180))
     
     # Posiciones
     title_pos = ((config.SCREEN_WIDTH - title_text.get_width()) // 2, config.SCREEN_HEIGHT // 3)
