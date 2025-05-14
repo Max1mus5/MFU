@@ -10,6 +10,7 @@ from src.core.scene_manager import SceneManager
 from src.core.mfu_algorithm import MFUAlgorithm
 from src.scenes.workshop_scene import WorkshopScene
 from src.scenes.collection_scene import CollectionScene
+from src.utils.asset_loader import AssetLoader
 
 class Game:
     """Main game class that manages the game loop and scenes"""
@@ -24,6 +25,10 @@ class Game:
         
         # Initialize clock
         self.clock = pygame.time.Clock()
+        
+        # Initialize asset loader
+        self.asset_loader = AssetLoader()
+        self.load_assets()
         
         # Initialize resource manager
         self.resource_manager = ResourceManager()
@@ -46,6 +51,22 @@ class Game:
         self.score = 0
         self.health = self.config.PLAYER_MAX_HEALTH
         self.weapons_repaired = 0
+    
+    def load_assets(self):
+        """Load all game assets"""
+        # Load character image
+        self.asset_loader.load_image("character", self.config.CHARACTER_IMAGE, (80, 120))
+        
+        # Load resource images
+        for resource_type, path in self.config.RESOURCE_IMAGES.items():
+            self.asset_loader.load_image(f"resource_{resource_type}", path, (40, 40))
+        
+        # Load weapon images
+        for weapon_type, path in self.config.WEAPON_IMAGES.items():
+            self.asset_loader.load_image(f"weapon_{weapon_type}", path, (80, 60))
+        
+        # Load UI images
+        self.asset_loader.load_image("clock_icon", self.config.CLOCK_ICON, (20, 20))
         
     def run(self):
         """Main game loop"""

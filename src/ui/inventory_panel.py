@@ -7,16 +7,17 @@ import pygame
 class InventoryPanel:
     """UI panel for displaying and interacting with inventory"""
     
-    def __init__(self, resource_manager, rect, config):
+    def __init__(self, game, rect, config):
         """
         Initialize the inventory panel
         
         Args:
-            resource_manager (ResourceManager): Resource manager with inventory
+            game (Game): Reference to the main game object
             rect (pygame.Rect): Rectangle defining panel position and size
             config (Config): Game configuration
         """
-        self.resource_manager = resource_manager
+        self.game = game
+        self.resource_manager = game.resource_manager
         self.rect = rect
         self.config = config
         
@@ -69,12 +70,20 @@ class InventoryPanel:
                 color = self.config.RESOURCE_TYPES[resource.type]["color"]
                 
                 # Draw resource icon
-                pygame.draw.rect(surface, color, pygame.Rect(
-                    slot_rect.x + 10,
-                    slot_rect.y + 10,
-                    slot_rect.width - 20,
-                    slot_rect.height - 30
-                ))
+                resource_image = self.game.asset_loader.get_image(f"resource_{resource.type}")
+                if resource_image:
+                    # Center the image in the slot
+                    image_x = slot_rect.x + (slot_rect.width - resource_image.get_width()) // 2
+                    image_y = slot_rect.y + 10
+                    surface.blit(resource_image, (image_x, image_y))
+                else:
+                    # Fallback to colored rectangle if image not available
+                    pygame.draw.rect(surface, color, pygame.Rect(
+                        slot_rect.x + 10,
+                        slot_rect.y + 10,
+                        slot_rect.width - 20,
+                        slot_rect.height - 30
+                    ))
                 
                 # Draw resource name
                 name = self.config.RESOURCE_TYPES[resource.type]["name"]

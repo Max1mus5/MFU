@@ -19,7 +19,7 @@ class WorkshopScene(Scene):
         
         # Create UI panels
         self.inventory_panel = InventoryPanel(
-            game.resource_manager,
+            game,
             pygame.Rect(50, 100, 300, 500),
             self.config
         )
@@ -79,7 +79,7 @@ class WorkshopScene(Scene):
         """Update scene logic"""
         # Update UI panels
         self.inventory_panel.update()
-        self.repair_panel.update(self.available_weapons, self.selected_weapon)
+        self.repair_panel.update(self.available_weapons, self.selected_weapon, self.game)
         self.status_panel.update()
         
         # Check game over conditions
@@ -99,9 +99,13 @@ class WorkshopScene(Scene):
     def draw_background(self, surface):
         """Draw the workshop background"""
         # Draw workshop elements (shelves, workbench, etc.)
-        # This would be more detailed with actual assets
         pygame.draw.rect(surface, (60, 50, 40), pygame.Rect(30, 80, 740, 540))
         pygame.draw.rect(surface, (70, 60, 50), pygame.Rect(400, 100, 350, 500))
+        
+        # Draw character on the right side of the workshop
+        character_image = self.game.asset_loader.get_image("character")
+        if character_image:
+            surface.blit(character_image, (780, 300))
     
     def try_repair_weapon(self):
         """Attempt to repair the selected weapon"""

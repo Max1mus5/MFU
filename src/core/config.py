@@ -3,6 +3,7 @@ Configuration module - Game settings and constants
 """
 
 import pygame
+import os
 
 class Config:
     """Configuration class for game settings"""
@@ -30,6 +31,33 @@ class Config:
         # Player settings
         self.PLAYER_MAX_HEALTH = 5
         self.WEAPONS_TO_WIN = 10
+        
+        # Asset paths
+        self.ASSETS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "assets")
+        self.IMAGES_DIR = os.path.join(self.ASSETS_DIR, "images")
+        
+        # Character image
+        self.CHARACTER_IMAGE = os.path.join(self.IMAGES_DIR, "main_character.png")
+        
+        # Resource images
+        self.RESOURCE_IMAGES = {
+            "nut": os.path.join(self.IMAGES_DIR, "elementos", "tuerca.png"),
+            "circuit": os.path.join(self.IMAGES_DIR, "elementos", "circuito.png"),
+            "cell": os.path.join(self.IMAGES_DIR, "elementos", "energia.png"),
+            "core": os.path.join(self.IMAGES_DIR, "elementos", "element_radioactivo.png")
+        }
+        
+        # Weapon images
+        self.WEAPON_IMAGES = {
+            "pistol": os.path.join(self.IMAGES_DIR, "armas", "arma_pistola.png"),
+            "shotgun": os.path.join(self.IMAGES_DIR, "armas", "arma_escopeta.png"),
+            "rifle": os.path.join(self.IMAGES_DIR, "armas", "arma_rifle.png"),
+            "laser": os.path.join(self.IMAGES_DIR, "armas", "arma_laser.png"),
+            "cannon": os.path.join(self.IMAGES_DIR, "armas", "arma_cañon.png")
+        }
+        
+        # UI images
+        self.CLOCK_ICON = os.path.join(self.IMAGES_DIR, "reloj_icon.png")
         
         # Resource types
         self.RESOURCE_TYPES = {

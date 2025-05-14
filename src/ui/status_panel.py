@@ -77,8 +77,16 @@ class StatusPanel:
         # Draw aging timer
         # Calculate time until next aging
         next_aging = (self.config.AGING_INTERVAL - pygame.time.get_ticks() % self.config.AGING_INTERVAL) // 1000
-        timer_text = self.config.FONT_SMALL.render(f"Aging: {next_aging}s", True, self.config.TEXT_COLOR)
-        surface.blit(timer_text, (self.rect.x + 300, self.rect.y + 10))
+        
+        # Draw clock icon if available
+        clock_icon = self.game.asset_loader.get_image("clock_icon")
+        if clock_icon:
+            surface.blit(clock_icon, (self.rect.x + 300, self.rect.y + 10))
+            timer_text = self.config.FONT_SMALL.render(f"{next_aging}s", True, self.config.TEXT_COLOR)
+            surface.blit(timer_text, (self.rect.x + 325, self.rect.y + 10))
+        else:
+            timer_text = self.config.FONT_SMALL.render(f"Aging: {next_aging}s", True, self.config.TEXT_COLOR)
+            surface.blit(timer_text, (self.rect.x + 300, self.rect.y + 10))
         
         # Draw navigation buttons
         pygame.draw.rect(surface, (60, 55, 50), self.workshop_button_rect)

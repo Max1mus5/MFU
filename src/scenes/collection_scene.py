@@ -116,11 +116,21 @@ class CollectionScene(Scene):
         
         # Draw resources
         for resource in self.resources:
-            color = self.config.RESOURCE_TYPES[resource["type"]]["color"]
-            pygame.draw.rect(surface, color, pygame.Rect(resource["x"], resource["y"], 30, 30))
+            resource_image = self.game.asset_loader.get_image(f"resource_{resource['type']}")
+            if resource_image:
+                surface.blit(resource_image, (resource["x"], resource["y"]))
+            else:
+                # Fallback to colored rectangle if image not available
+                color = self.config.RESOURCE_TYPES[resource["type"]]["color"]
+                pygame.draw.rect(surface, color, pygame.Rect(resource["x"], resource["y"], 30, 30))
         
-        # Draw player
-        pygame.draw.rect(surface, (200, 200, 200), self.player_rect)
+        # Draw player character
+        character_image = self.game.asset_loader.get_image("character")
+        if character_image:
+            surface.blit(character_image, (self.player_rect.x - 20, self.player_rect.y - 30))
+        else:
+            # Fallback to rectangle if image not available
+            pygame.draw.rect(surface, (200, 200, 200), self.player_rect)
         
         # Draw status panel
         self.status_panel.draw(surface)

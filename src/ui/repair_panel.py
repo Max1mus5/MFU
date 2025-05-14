@@ -17,6 +17,7 @@ class RepairPanel:
         """
         self.rect = rect
         self.config = config
+        self.game = None  # Will be set when update is called
         
         # Calculate weapon positions
         self.weapon_rects = []
@@ -39,16 +40,19 @@ class RepairPanel:
             40
         )
     
-    def update(self, weapons, selected_weapon):
+    def update(self, weapons, selected_weapon, game=None):
         """
         Update repair panel
         
         Args:
             weapons (list): List of available weapons
             selected_weapon (Weapon): Currently selected weapon
+            game (Game, optional): Reference to the main game object
         """
         self.weapons = weapons
         self.selected_weapon = selected_weapon
+        if game:
+            self.game = game
     
     def draw(self, surface):
         """
@@ -79,9 +83,17 @@ class RepairPanel:
                 
                 pygame.draw.rect(surface, self.config.UI_BORDER_COLOR, weapon_rect, 2)
                 
+                # Draw weapon image if available
+                if self.game and self.game.asset_loader:
+                    weapon_image = self.game.asset_loader.get_image(f"weapon_{weapon.type}")
+                    if weapon_image:
+                        image_x = weapon_rect.x + 10
+                        image_y = weapon_rect.y + 10
+                        surface.blit(weapon_image, (image_x, image_y))
+                
                 # Draw weapon name
                 name_text = self.config.FONT_MEDIUM.render(weapon.name, True, self.config.TEXT_COLOR)
-                surface.blit(name_text, (weapon_rect.x + 10, weapon_rect.y + 10))
+                surface.blit(name_text, (weapon_rect.x + 100, weapon_rect.y + 10))
                 
                 # Draw requirements
                 y_offset = 40
