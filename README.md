@@ -1,4 +1,4 @@
-# Sobrecarga de Óxido
+# Sobrecarga de Óxido (Rust Overload)
 
 Un simulador de taller post-apocalíptico que implementa el algoritmo de Más Frecuentemente Usado (MFU) para la gestión de recursos.
 
@@ -6,21 +6,21 @@ Un simulador de taller post-apocalíptico que implementa el algoritmo de Más Fr
 
 En el año 2147, después de un colapso ambiental, la humanidad sobrevive en ciudades subterráneas. Juegas como Jax, un ingeniero que mantiene armas para la defensa contra bandidos y mutantes. Tu taller tiene espacio de inventario limitado, y debes recolectar recursos en misiones rápidas.
 
-El desafío principal: Los materiales se oxidan si no se usan con frecuencia (¡el aire está lleno de ácido!). Para evitar desperdiciar espacio, debes descartar estratégicamente los recursos más frecuentemente utilizados que se han degradado.
+El desafío principal: Los materiales se oxidan si no se usan con frecuencia (¡el aire está lleno de ácido!). Para evitar desperdiciar espacio, debes descartar estratégicamente los recursos más utilizados que se han degradado.
 
 ## Mecánicas del Juego
 
 ### Recursos y Contadores de Uso
 - **Tipos de Recursos**:
-  - 🟫 Tuerca Oxidada (básico, usado en cualquier arma)
-  - 🔵 Circuito Frágil (para armas eléctricas)
-  - 🔋 Celda de Energía (para láseres)
-  - 💀 Núcleo Radioactivo (para armas pesadas)
+  - 🟫 Tuercas Oxidadas (básicas, usadas en cualquier arma)
+  - 🔵 Circuitos Frágiles (para armas eléctricas)
+  - 🔋 Celdas de Energía (para láseres)
+  - 💀 Núcleos Radioactivos (para armas pesadas)
 
 - **MFU con Envejecimiento**:
   - Cada recurso tiene un contador de 8 bits (0-255) que aumenta cuando se usa
   - Cada 15 segundos, los contadores se dividen por 2 (simulando oxidación)
-  - Cuando el inventario está lleno, el recurso con el contador más alto es reemplazado
+  - Cuando el inventario está lleno, se reemplaza el recurso con el contador más alto
 
 ### Flujo de Juego
 1. **Fase de Recolección**: Viaja a zonas de riesgo para recolectar recursos
@@ -33,7 +33,17 @@ El desafío principal: Los materiales se oxidan si no se usan con frecuencia (¡
 MFU/
 ├── assets/
 │   ├── audio/       # Efectos de sonido y música del juego
-│   └── images/      # Sprites y elementos de la interfaz de usuario
+│   │   ├── lose_point.mp3         # Sonido al perder vida
+│   │   ├── obtener_elemento.mp3   # Sonido al obtener elemento (opción 1)
+│   │   ├── obtener_elemento_2.mp3 # Sonido al obtener elemento (opción 2)
+│   │   └── point.mp3              # Sonido al ganar puntos
+│   └── images/      # Sprites y elementos de UI
+│       ├── Character/             # Imágenes de celebración del personaje
+│       │   ├── celebracion_1.png  # Frame 1 de celebración
+│       │   ├── celebracion_2.png  # Frame 2 de celebración
+│       │   ├── celebracion_3.png  # Frame 3 de celebración
+│       │   ├── celebracion_4.png  # Frame 4 de celebración
+│       │   └── celebracion_5.png  # Frame 5 de celebración
 ├── src/
 │   ├── core/        # Sistemas principales del juego
 │   │   ├── config.py            # Configuraciones y constantes del juego
@@ -53,81 +63,85 @@ MFU/
 │   │   ├── repair_panel.py      # Interfaz de reparación de armas
 │   │   └── status_panel.py      # Estado del juego y navegación
 │   └── utils/       # Funciones de utilidad
-│       └── asset_loader.py      # Utilidades para cargar recursos
+│       └── asset_loader.py      # Utilidades para cargar assets
 └── main.py          # Punto de entrada del juego
 ```
 
-## Descripción de Módulos
+## Documentación Detallada del Código
 
-### Módulos Principales (Core)
+### Configuraciones Generales
+- **src/core/config.py**: Contiene todas las configuraciones del juego:
+  - Líneas 13-14: Configuración de pantalla (ancho y alto)
+  - Línea 15: FPS del juego
+  - Líneas 18-22: Colores utilizados en el juego
+  - Líneas 25-29: Mecánicas del juego (tamaño de inventario, intervalo de envejecimiento, etc.)
+  - Líneas 32-33: Configuración del jugador (salud máxima, armas para ganar)
+  - Líneas 36-37: Rutas de assets
+  - Líneas 79-84: Definición de tipos de recursos con nombres, rareza y colores
+  - Líneas 87-113: Definición de tipos de armas, requisitos y puntos
 
-- **config.py**: Contiene configuraciones del juego, constantes y valores de configuración
-  - Aquí se definen los tipos de armas, recursos, y sus características
-  - Contiene constantes como PLAYER_MAX_HEALTH, AGING_INTERVAL, WEAPONS_TO_WIN
-  - Define rutas a archivos de recursos (imágenes, sonidos)
+### Gestión de Recursos y Armas
+- **src/entities/resource.py**: Define la clase Resource con:
+  - Contador de uso que aumenta cuando se usa un recurso
+  - Umbral tóxico que determina cuándo un recurso es peligroso de reemplazar
+  
+- **src/entities/weapon.py**: Define la clase Weapon con:
+  - Estados de arma (normal, oxidada, destruida)
+  - Requisitos de recursos para reparación
+  - Método de reparación que consume recursos
 
-- **game.py**: Controlador principal que gestiona el bucle del juego y las escenas
-  - Maneja la lógica de celebración cuando se ganan puntos
-  - Contiene métodos para reproducir sonidos (play_point_sound, play_obtain_element_sound, play_lose_point_sound)
-  - Implementa la lógica de pérdida de vida y condiciones de fin de juego
+### Sistema de Daño y Pérdida de Vida
+- **src/core/game.py**: 
+  - Líneas 125-144: Método `apply_aging()` que maneja el envejecimiento de recursos y armas
+  - Líneas 139-144: Cuando un arma se destruye, el jugador pierde 1 punto de salud y se reproduce el sonido de pérdida
+  - Líneas 146-149: Método `check_game_over()` que verifica si la salud del jugador llegó a 0
+  
+- **src/scenes/collection_scene.py**:
+  - Líneas 101-111: Daño al jugador cuando recolecta recursos tóxicos o núcleos radioactivos
 
-- **mfu_algorithm.py**: Implementa el algoritmo de reemplazo Más Frecuentemente Usado
-  - Gestiona los contadores de uso de recursos
-  - Implementa la lógica de envejecimiento (oxidación) de recursos
+### Animaciones y Efectos de Sonido
+- **src/core/game.py**:
+  - Líneas 55-59: Inicialización del estado de celebración
+  - Líneas 155-164: Método `start_celebration()` que inicia la animación y reproduce el sonido
+  - Líneas 166-172: Método `play_obtain_element_sound()` que reproduce un sonido aleatorio al obtener un elemento
+  - Líneas 174-178: Método `play_lose_point_sound()` que reproduce el sonido al perder vida
+  - Líneas 105-115: Actualización de la animación de celebración en el bucle principal
 
-- **resource_manager.py**: Gestiona el inventario del jugador y la recolección de recursos
-  - Controla el límite de inventario y la lógica de reemplazo
-  - Maneja la adición y eliminación de recursos
+- **src/scenes/workshop_scene.py**:
+  - Líneas 106-115: Renderizado de la animación de celebración o personaje normal
+  - Líneas 118-119: Inicio de la celebración cuando se repara un arma
 
-- **scene_manager.py**: Maneja diferentes escenas del juego y transiciones entre ellas
-  - Controla el cambio entre escenas de taller y recolección
+### Escenas del Juego
+- **src/scenes/workshop_scene.py**: Escena principal del taller donde:
+  - Se reparan armas usando recursos del inventario
+  - Se ganan puntos al reparar armas
+  - Se inicia la animación de celebración al reparar un arma
 
-### Módulos de Entidades
+- **src/scenes/collection_scene.py**: Escena de recolección donde:
+  - El jugador se mueve para recolectar recursos que caen
+  - Se reproducen sonidos al obtener elementos
+  - Se puede perder salud al recolectar elementos peligrosos
 
-- **resource.py**: Define la clase Resource para elementos coleccionables
-  - Implementa propiedades como tipo, contador de uso y estado
+### Interfaz de Usuario
+- **src/ui/status_panel.py**: Panel de estado que muestra:
+  - Salud del jugador (líneas 64-71)
+  - Puntuación y armas reparadas (líneas 73-88)
+  - Temporizador de oxidación (líneas 90-102)
+  - Botones de navegación (líneas 104-115)
 
-- **weapon.py**: Define la clase Weapon para armas reparables
-  - Contiene la lógica de reparación y requisitos de recursos
-  - Implementa estados de armas (dañada, reparada, destruida)
-  - Gestiona el envejecimiento de armas y su destrucción
+- **src/ui/repair_panel.py**: Panel de reparación que muestra:
+  - Armas disponibles para reparar (líneas 73-113)
+  - Botón de reparación (líneas 115-122)
 
-### Módulos de Escenas
-
-- **base_scene.py**: Clase base abstracta para todas las escenas del juego
-  - Define la interfaz común para todas las escenas
-
-- **collection_scene.py**: Escena para recolectar recursos en el páramo
-  - Implementa la generación aleatoria de recursos
-  - Maneja la colisión con recursos y la lógica de daño
-  - Reproduce sonidos al obtener elementos
-
-- **workshop_scene.py**: Escena principal de juego en el taller para reparar armas
-  - Gestiona la selección y reparación de armas
-  - Inicia la animación de celebración cuando se repara un arma
-  - Muestra la animación de celebración del personaje
-
-### Módulos de Interfaz de Usuario
-
-- **inventory_panel.py**: Componente UI para mostrar e interactuar con el inventario
-  - Visualiza los recursos disponibles y sus contadores
-
-- **repair_panel.py**: Componente UI para la interfaz de reparación de armas
-  - Muestra las armas disponibles y su estado
-
-- **status_panel.py**: Componente UI para el estado del juego y botones de navegación
-  - Muestra salud, puntuación y otros indicadores
-
-### Módulos de Utilidad
-
-- **asset_loader.py**: Utilidad para cargar y gestionar recursos del juego (imágenes, sonidos, fuentes)
-  - Proporciona métodos para acceder a recursos cargados
+- **src/ui/inventory_panel.py**: Panel de inventario que muestra:
+  - Recursos en el inventario (líneas 60-107)
+  - Barra de contador para cada recurso (líneas 93-107)
 
 ## Objetivos del Juego
 
 - **Condición de Victoria**: Reparar 10 armas para equipar a tu facción y resistir un ataque final de mutantes
 - **Condición de Derrota**: 
-  - Salud agotada (por reemplazos de recursos tóxicos)
+  - Salud agotada (por reemplazos tóxicos de recursos)
   - No reparar suficientes armas antes del límite de tiempo
 
 ## Elementos Estratégicos
@@ -135,29 +149,6 @@ MFU/
 - No sobreutilizar un solo tipo de recurso (contador alto = candidato para eliminación)
 - Equilibrar el envejecimiento usando recursos antes de que se oxiden demasiado
 - Priorizar estratégicamente recursos raros como núcleos radioactivos
-
-## Características Especiales
-
-- **Animación de Celebración**: Cuando se repara un arma o se ganan puntos, el personaje realiza una animación de celebración
-- **Efectos de Sonido**:
-  - Sonido de punto cuando se ganan puntos (assets/audio/point.mp3)
-  - Sonidos aleatorios al obtener elementos (assets/audio/obtener_elemento.mp3 o assets/audio/obtener_elemento_2.mp3)
-  - Sonido cuando se pierde una vida (assets/audio/lose_point.mp3)
-
-## Configuraciones y Ajustes
-
-- **Configuración de Dificultad**: En config.py puedes ajustar:
-  - PLAYER_MAX_HEALTH: Salud máxima del jugador
-  - AGING_INTERVAL: Frecuencia de oxidación (en milisegundos)
-  - WEAPONS_TO_WIN: Número de armas necesarias para ganar
-  - INVENTORY_SIZE: Tamaño máximo del inventario
-
-- **Configuración de Armas**: En config.py se definen los tipos de armas:
-  - Pistola Oxidada: Arma básica
-  - Escopeta de Chatarra: Arma de medio alcance
-  - Rifle Improvisado: Arma de largo alcance
-  - Cortador Láser: Arma avanzada
-  - Cañón de Plasma: Arma pesada
 
 ## Instalación y Ejecución
 
@@ -167,10 +158,10 @@ MFU/
 
 ## Controles
 
-- **Escena de Taller**:
+- **Escena del Taller**:
   - Ratón: Seleccionar recursos y armas, hacer clic en el botón de reparación
   - Tecla C: Cambiar a la escena de recolección
 
 - **Escena de Recolección**:
   - Flechas Izquierda/Derecha: Mover al jugador
-  - Tecla W: Cambiar a la escena de taller
+  - Tecla W: Cambiar a la escena del taller
