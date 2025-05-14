@@ -112,6 +112,8 @@ class Game:
     
     def apply_aging(self):
         """Apply aging to all resources and weapons"""
+        print("Applying aging to resources and weapons...")
+        
         # Apply aging to resources
         self.resource_manager.apply_aging()
         
@@ -128,8 +130,11 @@ class Game:
                         # Only lose health once per round for destroyed weapons
                         self.health -= 1
                         weapon_destroyed_this_round = True
+                        print(f"Weapon destroyed! Health reduced to {self.health}")
                         # Play lose point sound
                         self.play_lose_point_sound()
+        
+        print("Aging process completed")
     
     def check_game_over(self):
         """Check if game is over (player health <= 0)"""
@@ -142,29 +147,6 @@ class Game:
         if self.config.WEAPONS_TO_WIN > 0 and self.weapons_repaired >= self.config.WEAPONS_TO_WIN:
             self.game_over("¡Has equipado exitosamente a tu facción! ¡Victoria!")
     
-    def start_celebration(self):
-        """Start the celebration animation and play sound when points are gained"""
-        self.celebrating = True
-        self.celebration_frame = 1
-        self.celebration_timer = 0
-        
-        # Play the point sound if audio is enabled
-        if self.audio_enabled:
-            point_sound = self.asset_loader.get_sound("point")
-            if point_sound:
-                point_sound.play()
-    
-    def play_obtain_element_sound(self):
-        """Play a random sound when an element is obtained"""
-        if not self.audio_enabled:
-            return
-            
-        import random
-        sound_name = random.choice(["obtain_element_1", "obtain_element_2"])
-        sound = self.asset_loader.get_sound(sound_name)
-        if sound:
-            sound.play()
-    
     def play_lose_point_sound(self):
         """Play sound when a life is lost"""
         if not self.audio_enabled:
@@ -173,10 +155,12 @@ class Game:
         sound = self.asset_loader.get_sound("lose_point")
         if sound:
             sound.play()
+            print("Playing lose point sound")
             
     def play_background_music(self, scene_name):
         """Play background music for the current scene with gradual volume increase"""
         if not self.audio_enabled:
+            print(f"Audio disabled, not playing music for {scene_name}")
             return
             
         # Determine which music to play based on the scene
@@ -187,9 +171,15 @@ class Game:
             music_name = "collection_music"
         
         # If no valid scene or already playing the correct music, do nothing
-        if not music_name or (self.current_music and self.current_music == music_name):
+        if not music_name:
+            print(f"No music defined for scene: {scene_name}")
+            return
+        elif self.current_music and self.current_music == music_name:
+            print(f"Already playing {music_name}, no change needed")
             return
             
+        print(f"Changing music to {music_name} for scene {scene_name}")
+        
         # Stop any currently playing music
         pygame.mixer.stop()
         
@@ -203,6 +193,9 @@ class Game:
             # Store current music and reset volume
             self.current_music = music_name
             self.music_volume = 0.0
+            print(f"Started playing {music_name} with initial volume 0.0")
+        else:
+            print(f"Failed to load music: {music_name}")
             
     def update_music_volume(self, dt):
         """Gradually increase music volume"""
@@ -212,10 +205,14 @@ class Game:
         # Increase volume gradually
         if self.music_volume < self.target_volume:
             # Increase by 0.001 per millisecond, up to target volume
+            old_volume = self.music_volume
             self.music_volume = min(self.music_volume + 0.0001 * dt, self.target_volume)
             music = self.asset_loader.get_sound(self.current_music)
             if music:
                 music.set_volume(self.music_volume)
+                # Only print when volume changes significantly to avoid console spam
+                if int(old_volume * 100) != int(self.music_volume * 100) and int(self.music_volume * 100) % 10 == 0:
+                    print(f"Music volume updated to {self.music_volume:.2f}")
                 
     def play_point_sound(self):
         """Play sound when player gains points"""
@@ -223,6 +220,7 @@ class Game:
             sound = self.asset_loader.get_sound("point")
             if sound:
                 sound.play()
+                print("Playing point sound")
                 
     def play_obtain_element_sound(self):
         """Play a random sound when player obtains an element"""
@@ -233,32 +231,32 @@ class Game:
             sound = self.asset_loader.get_sound(sound_name)
             if sound:
                 sound.play()
-                
-    def play_lose_point_sound(self):
-        """Play sound when player loses a life"""
-        if self.audio_enabled:
-            sound = self.asset_loader.get_sound("lose_point")
-            if sound:
-                sound.play()
+                print(f"Playing obtain element sound: {sound_name}")
                 
     def start_celebration(self):
         """Start the character celebration animation and play sound"""
         self.celebrating = True
         self.celebration_frame = 1
         self.celebration_timer = pygame.time.get_ticks()
+        print("Starting celebration animation")
         
         # Play point sound
         self.play_point_sound()
     
     def game_over(self, message):
         """Handle game over state"""
+        print(f"Game over: {message}")
+        print(f"Final score: {self.score}, Weapons repaired: {self.weapons_repaired}")
+        
         # Determine which image to use based on the message
         if "Victoria" in message:
             # Victory condition
             background_image = self.asset_loader.get_image("gamewin")
+            print("Showing victory screen")
         else:
             # Game over condition
             background_image = self.asset_loader.get_image("gameover")
+            print("Showing game over screen")
         
         # Display the background image
         if background_image:
@@ -266,6 +264,7 @@ class Game:
         else:
             # Fallback to black background if image not found
             self.screen.fill((0, 0, 0))
+            print("Warning: Game over background image not found, using black background")
         
         # Create font for score display
         font_medium = pygame.font.Font(None, 36)
@@ -290,16 +289,21 @@ class Game:
         
         pygame.display.flip()
         
+        print("Waiting for ESC key to exit...")
+        
         # Wait for ESC key to exit
         waiting = True
         while waiting:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    print("Quit event received")
                     waiting = False
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
+                        print("ESC key pressed, exiting game")
                         waiting = False
             
             self.clock.tick(30)
         
         self.running = False
+        print("Game terminated")

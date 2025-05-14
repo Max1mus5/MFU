@@ -20,24 +20,25 @@ async def show_start_screen(screen, clock, config):
     """Muestra la pantalla de inicio y espera a que el usuario presione espacio"""
     global waiting_for_start, audio_initialized
     
+    # Cargar imagen de fondo
+    try:
+        background_image = pygame.image.load("assets/images/start_screen.png")
+        background_image = pygame.transform.scale(background_image, (config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
+        print("Background image loaded successfully")
+    except Exception as e:
+        print(f"Error loading background image: {e}")
+        background_image = None
+    
     # Crear fuente para el texto
     try:
-        font_large = pygame.font.Font(None, 64)
         font_medium = pygame.font.Font(None, 36)
-        font_small = pygame.font.Font(None, 24)
     except:
-        font_large = pygame.font.SysFont("Arial", 64)
         font_medium = pygame.font.SysFont("Arial", 36)
-        font_small = pygame.font.SysFont("Arial", 24)
     
-    # Textos
-    title_text = font_large.render("SOBRECARGA DE ÓXIDO", True, (245, 166, 35))
-    subtitle_text = font_medium.render("Un simulador post-apocalíptico", True, (200, 200, 200))
+    # Texto de inicio
     start_text = font_medium.render("Presiona ESPACIO para comenzar", True, (255, 255, 255))
     
-    # Posiciones
-    title_pos = ((config.SCREEN_WIDTH - title_text.get_width()) // 2, config.SCREEN_HEIGHT // 3)
-    subtitle_pos = ((config.SCREEN_WIDTH - subtitle_text.get_width()) // 2, title_pos[1] + 80)
+    # Posición del texto
     start_pos = ((config.SCREEN_WIDTH - start_text.get_width()) // 2, config.SCREEN_HEIGHT * 2 // 3)
     
     # Efecto de parpadeo para el texto de inicio
@@ -74,12 +75,13 @@ async def show_start_screen(screen, clock, config):
             show_start_text = not show_start_text
         
         # Dibujar fondo
-        screen.fill((40, 40, 40))
+        if background_image:
+            screen.blit(background_image, (0, 0))
+        else:
+            screen.fill((40, 40, 40))
+            print("Using fallback background color")
         
-        # Dibujar textos
-        screen.blit(title_text, title_pos)
-        screen.blit(subtitle_text, subtitle_pos)
-        
+        # Dibujar texto de inicio
         if show_start_text:
             screen.blit(start_text, start_pos)
                 
