@@ -39,7 +39,6 @@ async def show_start_screen(screen, clock, config):
     title_pos = ((config.SCREEN_WIDTH - title_text.get_width()) // 2, config.SCREEN_HEIGHT // 3)
     subtitle_pos = ((config.SCREEN_WIDTH - subtitle_text.get_width()) // 2, title_pos[1] + 80)
     start_pos = ((config.SCREEN_WIDTH - start_text.get_width()) // 2, config.SCREEN_HEIGHT * 2 // 3)
-    audio_pos = ((config.SCREEN_WIDTH - audio_text.get_width()) // 2, start_pos[1] + 50)
     
     # Efecto de parpadeo para el texto de inicio
     blink_timer = 0
@@ -83,9 +82,7 @@ async def show_start_screen(screen, clock, config):
         
         if show_start_text:
             screen.blit(start_text, start_pos)
-        
-        screen.blit(audio_text, audio_pos)
-        
+                
         # Actualizar pantalla
         pygame.display.flip()
         
