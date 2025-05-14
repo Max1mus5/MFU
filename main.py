@@ -31,9 +31,9 @@ async def show_start_screen(screen, clock, config):
         font_small = pygame.font.SysFont("Arial", 24)
     
     # Textos
-    title_text = font_large.render("SOBRECARGA DE ÓXIDO", True, (245, 166, 35))
-    subtitle_text = font_medium.render("Un simulador post-apocalíptico", True, (200, 200, 200))
-    start_text = font_medium.render("Presiona ESPACIO para comenzar", True, (255, 255, 255))
+    title_text = font_large.render("RUST OVERLOAD", True, (245, 166, 35))
+    subtitle_text = font_medium.render("A post-apocalyptic simulator", True, (200, 200, 200))
+    start_text = font_medium.render("Press SPACE to start", True, (255, 255, 255))
     
     # Posiciones
     title_pos = ((config.SCREEN_WIDTH - title_text.get_width()) // 2, config.SCREEN_HEIGHT // 3)
@@ -143,6 +143,10 @@ async def main():
         
         # Update active scene
         game.scene_manager.update()
+        
+        # Update music volume (fade in)
+        dt = game.clock.get_time()  # Time since last frame in milliseconds
+        game.update_music_volume(dt)
         
         # Update celebration animation if active
         if game.celebrating:

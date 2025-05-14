@@ -38,6 +38,12 @@ class SceneManager:
             # Set and enter new scene
             self.active_scene = self.scenes[scene_id]
             self.active_scene.on_enter()
+            
+            # Start playing the appropriate background music
+            # We need to access the game instance from the scene
+            if hasattr(self.active_scene, 'game'):
+                self.active_scene.game.play_background_music(scene_id)
+                
             return True
         
         return False
