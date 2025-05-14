@@ -40,7 +40,7 @@ class StatusPanel:
         
         # Aging timer display
         self.timer_rect = pygame.Rect(
-            self.rect.x + 300,
+            self.rect.x + 800,
             self.rect.y + 5,
             100,
             button_height
@@ -94,12 +94,12 @@ class StatusPanel:
         # Draw clock icon if available
         clock_icon = self.game.asset_loader.get_image("clock_icon")
         if clock_icon:
-            surface.blit(clock_icon, (self.rect.x + 300, self.rect.y + 10))
+            surface.blit(clock_icon, (self.rect.x + 800, self.rect.y + 10))
             timer_text = self.config.FONT_SMALL.render(f"{next_aging}s", True, self.config.TEXT_COLOR)
-            surface.blit(timer_text, (self.rect.x + 325, self.rect.y + 10))
+            surface.blit(timer_text, (self.rect.x + 825, self.rect.y + 10))
         else:
             timer_text = self.config.FONT_SMALL.render(f"Aging: {next_aging}s", True, self.config.TEXT_COLOR)
-            surface.blit(timer_text, (self.rect.x + 300, self.rect.y + 10))
+            surface.blit(timer_text, (self.rect.x + 800, self.rect.y + 10))
         
         # Draw navigation buttons
         pygame.draw.rect(surface, (60, 55, 50), self.workshop_button_rect)
