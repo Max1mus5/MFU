@@ -12,7 +12,12 @@ def main():
     """Main function to initialize and run the game"""
     # Initialize pygame
     pygame.init()
-    pygame.mixer.init()
+    
+    # Initialize mixer if available
+    try:
+        pygame.mixer.init()
+    except pygame.error:
+        print("Warning: Audio device not available. Running without sound.")
     
     # Create and run game
     game = Game()
