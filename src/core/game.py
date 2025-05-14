@@ -26,6 +26,9 @@ class Game:
         # Initialize clock
         self.clock = pygame.time.Clock()
         
+        # Audio state
+        self.audio_enabled = True
+        
         # Initialize asset loader
         self.asset_loader = AssetLoader()
         self.load_assets()
@@ -131,13 +134,17 @@ class Game:
         self.celebration_frame = 1
         self.celebration_timer = 0
         
-        # Play the point sound
-        point_sound = self.asset_loader.get_sound("point")
-        if point_sound:
-            point_sound.play()
+        # Play the point sound if audio is enabled
+        if self.audio_enabled:
+            point_sound = self.asset_loader.get_sound("point")
+            if point_sound:
+                point_sound.play()
     
     def play_obtain_element_sound(self):
         """Play a random sound when an element is obtained"""
+        if not self.audio_enabled:
+            return
+            
         import random
         sound_name = random.choice(["obtain_element_1", "obtain_element_2"])
         sound = self.asset_loader.get_sound(sound_name)
@@ -146,6 +153,9 @@ class Game:
     
     def play_lose_point_sound(self):
         """Play sound when a life is lost"""
+        if not self.audio_enabled:
+            return
+            
         sound = self.asset_loader.get_sound("lose_point")
         if sound:
             sound.play()
