@@ -1,0 +1,41 @@
+# Configuración de pygbag para Sobrecarga de Óxido
+
+# Información general
+app_name = "Sobrecarga de Óxido"
+version = "1.0.0"
+author = "Jeronimo"
+description = "Un simulador post-apocalíptico con algoritmo MFU"
+
+# Configuración de la ventana
+width = 1024
+height = 768
+fps = 60
+resizable = false
+
+# Configuración de la aplicación web
+html_template = "pygbag.html"
+html_title = "Sobrecarga de Óxido - Juego WebAssembly"
+html_favicon = "assets/images/reloj_icon.png"
+html_header_color = "#222222"
+html_background_color = "#222222"
+html_foreground_color = "#f5a623"
+
+# Configuración de empaquetado
+archive_files = [
+    "assets/",
+    "src/",
+    "main.py",
+    "README.md"
+]
+
+# Configuración de audio
+audio_formats = ["mp3", "wav"]
+
+# Configuración de imágenes
+image_formats = ["png", "jpg", "jpeg"]
+
+# Configuración de fuentes
+font_formats = ["ttf", "otf"]
+
+# Configuración de depuración
+debug = false

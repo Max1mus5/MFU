@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobrecarga de Óxido - Juego WebAssembly</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #222;
+            color: #eee;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #f5a623;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        #game-container {
+            width: 1024px;
+            height: 768px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        #loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        
+        #loading-progress {
+            width: 80%;
+            height: 20px;
+            background-color: #333;
+            border-radius: 10px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #f5a623;
+            transition: width 0.3s ease;
+        }
+        
+        #instructions {
+            margin-top: 20px;
+            text-align: center;
+            max-width: 800px;
+            padding: 15px;
+            background-color: #333;
+            border-radius: 10px;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sobrecarga de Óxido</h1>
+        <p>Un simulador post-apocalíptico con algoritmo MFU</p>
+    </header>
+    
+    <div id="game-container">
+        <div id="loading">
+            <h2>Cargando juego...</h2>
+            <div id="loading-progress">
+                <div id="progress-bar"></div>
+            </div>
+            <p id="loading-text">Preparando recursos...</p>
+        </div>
+        <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+    </div>
+    
+    <div id="instructions">
+        <h3>Instrucciones:</h3>
+        <p>En el taller: Haz clic en las armas para repararlas usando los recursos disponibles.</p>
+        <p>En la recolección: Usa las flechas IZQUIERDA/DERECHA para moverte y recoger recursos.</p>
+        <p>Objetivo: Repara tantas armas como puedas antes de quedarte sin salud.</p>
+    </div>
+    
+    <script type="text/javascript">
+        // Función para actualizar la barra de progreso
+        function updateProgress(percent) {
+            document.getElementById('progress-bar').style.width = percent + '%';
+            document.getElementById('loading-text').textContent = 
+                'Cargando... ' + Math.round(percent) + '%';
+            
+            if (percent >= 100) {
+                setTimeout(() => {
+                    document.getElementById('loading').style.display = 'none';
+                }, 500);
+            }
+        }
+        
+        // Simular progreso de carga (esto será reemplazado por el progreso real de pygbag)
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 5;
+            if (progress > 100) {
+                progress = 100;
+                clearInterval(interval);
+            }
+            updateProgress(progress);
+        }, 100);
+        
+        // Esta función será llamada por pygbag para actualizar el progreso real
+        window.pygbagUpdateProgress = function(current, total) {
+            const percent = (current / total) * 100;
+            updateProgress(percent);
+        };
+    </script>
+</body>
+</html>

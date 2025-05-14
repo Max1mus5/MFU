@@ -90,40 +90,8 @@ class Game:
         self.asset_loader.load_sound("obtain_element_2", f"{self.config.ASSETS_DIR}/audio/obtener_elemento_2.mp3")
         self.asset_loader.load_sound("lose_point", f"{self.config.ASSETS_DIR}/audio/lose_point.mp3")
         
-    def run(self):
-        """Main game loop"""
-        while self.running:
-            # Handle events
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
-                elif event.type == self.aging_event:
-                    self.apply_aging()
-                else:
-                    self.scene_manager.handle_event(event)
-            
-            # Update
-            self.scene_manager.update()
-            
-            # Update celebration animation if active
-            if self.celebrating:
-                self.celebration_timer += self.clock.get_time()
-                if self.celebration_timer >= self.celebration_interval:
-                    self.celebration_frame += 1
-                    self.celebration_timer = 0
-                    
-                    # End celebration after showing all frames
-                    if self.celebration_frame > 5:
-                        self.celebrating = False
-                        self.celebration_frame = 1
-            
-            # Draw
-            self.screen.fill(self.config.BACKGROUND_COLOR)
-            self.scene_manager.draw(self.screen)
-            pygame.display.flip()
-            
-            # Cap the frame rate
-            self.clock.tick(self.config.FPS)
+    # El método run se ha eliminado ya que ahora el bucle principal está en main.py
+    # La lógica de actualización de la celebración se maneja directamente en main.py
     
     def apply_aging(self):
         """Apply aging to all resources and weapons"""
