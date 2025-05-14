@@ -87,6 +87,10 @@ class Game:
         # Load background image
         self.asset_loader.load_image("background", f"{self.config.ASSETS_DIR}/images/backGround.png", (self.config.SCREEN_WIDTH, self.config.SCREEN_HEIGHT))
         
+        # Load game over and victory images
+        self.asset_loader.load_image("gameover", f"{self.config.ASSETS_DIR}/images/gameover.png", (self.config.SCREEN_WIDTH, self.config.SCREEN_HEIGHT))
+        self.asset_loader.load_image("gamewin", f"{self.config.ASSETS_DIR}/images/gamewin.png", (self.config.SCREEN_WIDTH, self.config.SCREEN_HEIGHT))
+        
         # Load sounds
         self.asset_loader.load_sound("point", f"{self.config.ASSETS_DIR}/audio/point.mp3")
         self.asset_loader.load_sound("obtain_element_1", f"{self.config.ASSETS_DIR}/audio/obtener_elemento.mp3")
@@ -248,36 +252,40 @@ class Game:
     
     def game_over(self, message):
         """Handle game over state"""
-        # Create game over screen
-        self.screen.fill((0, 0, 0))
+        # Determine which image to use based on the message
+        if "Victoria" in message:
+            # Victory condition
+            background_image = self.asset_loader.get_image("gamewin")
+        else:
+            # Game over condition
+            background_image = self.asset_loader.get_image("gameover")
         
-        # Draw game over message
-        font_large = pygame.font.Font(None, 64)
+        # Display the background image
+        if background_image:
+            self.screen.blit(background_image, (0, 0))
+        else:
+            # Fallback to black background if image not found
+            self.screen.fill((0, 0, 0))
+        
+        # Create font for score display
         font_medium = pygame.font.Font(None, 36)
         
-        # Game over title
-        title_text = font_large.render("FIN DEL JUEGO", True, (255, 0, 0))
-        title_rect = title_text.get_rect(center=(self.config.SCREEN_WIDTH // 2, 200))
-        self.screen.blit(title_text, title_rect)
-        
-        # Result message
-        message_text = font_medium.render(message, True, (255, 255, 255))
-        message_rect = message_text.get_rect(center=(self.config.SCREEN_WIDTH // 2, 280))
-        self.screen.blit(message_text, message_rect)
-        
-        # Score
-        score_text = font_medium.render(f"Puntuación Final: {self.score}", True, (255, 255, 0))
-        score_rect = score_text.get_rect(center=(self.config.SCREEN_WIDTH // 2, 340))
+        # Score in bottom right corner with white text
+        score_text = font_medium.render(f"Puntuación: {self.score}", True, (255, 255, 255))
+        score_rect = score_text.get_rect()
+        score_rect.bottomright = (self.config.SCREEN_WIDTH - 20, self.config.SCREEN_HEIGHT - 20)
         self.screen.blit(score_text, score_rect)
         
-        # Weapons repaired
-        weapons_text = font_medium.render(f"Armas Reparadas: {self.weapons_repaired}", True, (200, 200, 200))
-        weapons_rect = weapons_text.get_rect(center=(self.config.SCREEN_WIDTH // 2, 380))
+        # Weapons repaired (slightly above score)
+        weapons_text = font_medium.render(f"Armas Reparadas: {self.weapons_repaired}", True, (255, 255, 255))
+        weapons_rect = weapons_text.get_rect()
+        weapons_rect.bottomright = (self.config.SCREEN_WIDTH - 20, score_rect.top - 10)
         self.screen.blit(weapons_text, weapons_rect)
         
-        # Exit instructions
-        exit_text = font_medium.render("Presiona ESC para salir", True, (150, 150, 150))
-        exit_rect = exit_text.get_rect(center=(self.config.SCREEN_WIDTH // 2, 450))
+        # Exit instructions at the bottom
+        exit_text = font_medium.render("Presiona ESC para salir", True, (255, 255, 255))
+        exit_rect = exit_text.get_rect()
+        exit_rect.midbottom = (self.config.SCREEN_WIDTH // 2, self.config.SCREEN_HEIGHT - 20)
         self.screen.blit(exit_text, exit_rect)
         
         pygame.display.flip()
