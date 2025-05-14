@@ -98,9 +98,15 @@ class WorkshopScene(Scene):
     
     def draw_background(self, surface):
         """Draw the workshop background"""
-        # Draw workshop elements (shelves, workbench, etc.)
-        pygame.draw.rect(surface, (60, 50, 40), pygame.Rect(30, 80, 740, 540))
-        pygame.draw.rect(surface, (70, 60, 50), pygame.Rect(400, 100, 350, 500))
+        # Draw background image
+        background_image = self.game.asset_loader.get_image("background")
+        if background_image:
+            surface.blit(background_image, (0, 0))
+        else:
+            # Fallback to original workshop elements if image not available
+            # Draw workshop elements (shelves, workbench, etc.)
+            pygame.draw.rect(surface, (60, 50, 40), pygame.Rect(30, 80, 740, 540))
+            pygame.draw.rect(surface, (70, 60, 50), pygame.Rect(400, 100, 350, 500))
         
         # Draw character on the right side of the workshop
         if self.game.celebrating:
