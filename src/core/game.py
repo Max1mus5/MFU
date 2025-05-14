@@ -103,7 +103,7 @@ class Game:
             # Track if any weapon was destroyed this round
             weapon_destroyed_this_round = False
             
-            for weapon in workshop_scene.weapons:
+            for weapon in workshop_scene.available_weapons:
                 # Update weapon state and check if it was destroyed
                 if weapon.update_state(self.config.AGING_INTERVAL):
                     if not weapon_destroyed_this_round:
