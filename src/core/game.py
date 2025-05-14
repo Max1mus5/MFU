@@ -81,6 +81,9 @@ class Game:
         # Load UI images
         self.asset_loader.load_image("clock_icon", self.config.CLOCK_ICON, (20, 20))
         
+        # Load background image
+        self.asset_loader.load_image("background", f"{self.config.ASSETS_DIR}/images/backGround.png", (self.config.SCREEN_WIDTH, self.config.SCREEN_HEIGHT))
+        
         # Load sounds
         self.asset_loader.load_sound("point", f"{self.config.ASSETS_DIR}/audio/point.mp3")
         self.asset_loader.load_sound("obtain_element_1", f"{self.config.ASSETS_DIR}/audio/obtener_elemento.mp3")

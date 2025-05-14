@@ -161,11 +161,17 @@ class CollectionScene(Scene):
     
     def draw_background(self, surface):
         """Draw the wasteland background"""
-        # Draw sky
-        pygame.draw.rect(surface, (80, 60, 80), pygame.Rect(0, 0, self.config.SCREEN_WIDTH, self.config.SCREEN_HEIGHT))
-        
-        # Draw ground
-        pygame.draw.rect(surface, (100, 80, 60), pygame.Rect(0, self.config.SCREEN_HEIGHT - 50, self.config.SCREEN_WIDTH, 50))
+        # Draw background image
+        background_image = self.game.asset_loader.get_image("background")
+        if background_image:
+            surface.blit(background_image, (0, 0))
+        else:
+            # Fallback to original colored rectangles if image not available
+            # Draw sky
+            pygame.draw.rect(surface, (80, 60, 80), pygame.Rect(0, 0, self.config.SCREEN_WIDTH, self.config.SCREEN_HEIGHT))
+            
+            # Draw ground
+            pygame.draw.rect(surface, (100, 80, 60), pygame.Rect(0, self.config.SCREEN_HEIGHT - 50, self.config.SCREEN_WIDTH, 50))
     
     def spawn_resource(self):
         """Spawn a random resource"""
